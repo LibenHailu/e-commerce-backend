@@ -35,7 +35,6 @@ module.exports = {
     addRate: async (_, { id, rate }) => {
       try {
         const product = await Product.findById(id, (_, doc) => {
-          console.log(doc);
           doc.rates = doc.rates + rate;
           doc.raters = doc.raters + 1;
           doc.save();
