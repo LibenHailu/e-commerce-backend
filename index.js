@@ -1,21 +1,26 @@
-const { ApolloServer } = require("apollo-server");
-const connectDb = require("./config/db");
-const typeDefs = require("./qraphql/typedefs");
-const resolvers = require("./qraphql/resolvers");
+const { ApolloServer } = require("apollo-server-express");
+const express = require("express");
+const connectDB = require("./config/db");
+const typeDefs = require("./graphql/typeDefs");
+const resolvers = require("./graphql/resolvers/index");
 
 //connecting to database
-connectDb();
+connectDB();
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => ({ req }),
 });
-// listinig to server
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
 
-// TODO
-// delete recipe
-// find recipe
+const app = express();
+
+server.applyMiddleware({ app });
+
+// serving images inside public/images
+app.use(express.static("public"));
+
+// listinig to server
+app.listen({ port: 4000 }, () => {
+  console.log(`🚀  Server ready at http://localhost:4000`);
+});

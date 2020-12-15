@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-const connectDb = async () => {
+const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost/recipe", {
-      useUnifiedTopology: true,
+    await mongoose.connect("mongodb://localhost/ecommerce", {
       useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
     console.log("database connected");
   } catch (err) {
@@ -13,4 +13,4 @@ const connectDb = async () => {
   }
 };
 
-module.exports = connectDb;
+module.exports = connectDB;
