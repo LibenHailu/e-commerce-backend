@@ -7,6 +7,7 @@ const resolvers = require("./graphql/resolvers/index");
 //connecting to database
 connectDB();
 
+const PORT = process.env.port || 4000;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -21,6 +22,6 @@ server.applyMiddleware({ app });
 app.use(express.static("public"));
 
 // listinig to server
-app.listen({ port: 4000 }, () => {
-  console.log(`🚀  Server ready at http://localhost:4000`);
+app.listen({ port: PORT }, () => {
+  console.log(`🚀  Server ready`);
 });
