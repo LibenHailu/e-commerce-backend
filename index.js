@@ -7,7 +7,7 @@ const resolvers = require("./graphql/resolvers/index");
 //connecting to database
 connectDB();
 
-const PORT = process.env.port || 4000;
+const PORT = process.env.PORT || 4000;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
