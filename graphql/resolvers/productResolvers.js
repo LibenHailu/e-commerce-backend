@@ -2,9 +2,47 @@ const Product = require("../../model/Product");
 
 module.exports = {
   Query: {
+    getProductPage: async (_, { pageNum, pageSize }) => {
+      try {
+        let products;
+        if (pageNum === 1) {
+          products = await Product.find({}).sort({}).limit(pageSize);
+        } else {
+          // if page is greater than one figure out how many posts to skip
+          const skips = pageSize * (pageNum - 1);
+          products = await Product.find({})
+            .sort({})
+            .skip(skips)
+            .limit(pageSize);
+        }
+        const totalDocs = await Product.countDocuments();
+        const hasMore = totalDocs > pageSize * pageNum;
+
+        // calculating rates
+        products.forEach((prod) => {
+          if (prod.rates && prod.raters) {
+            prod.rate = prod.rates / prod.raters;
+          } else {
+            prod.rate = 0;
+          }
+        });
+
+        return { products, hasMore };
+      } catch (err) {
+        console.log(err);
+        return new Error(err);
+      }
+    },
+
     product: async (_, { id }) => {
       try {
         const product = await Product.findById(id);
+
+        if (product.rates && product.raters) {
+          product.rate = product.rates / product.raters;
+        } else {
+          product.rate = 0;
+        }
 
         let ratedProduct = {
           id: product._id,
@@ -12,7 +50,7 @@ module.exports = {
           description: product.description,
           price: product.price,
           image: product.image,
-          rate: product.rates / product.raters,
+          rate: product.rate,
         };
 
         return ratedProduct;

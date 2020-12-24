@@ -105,7 +105,6 @@ module.exports = {
         const user = await User.findById(authUser.id);
 
         const match = await bcrypt.compare(oldPassword, user.password);
-        console.log(match);
         if (match) {
           user.username = username;
           user.email = email;
